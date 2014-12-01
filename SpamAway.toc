@@ -1,0 +1,5 @@
+## Interface: 60000
+## Notes: Hides spammy NPC dialog, useless system messages, repeated AFK messages, and automated spam from other players' addons.
+## SavedVariables: SpamAwayDB
+
+SpamAway.lua
