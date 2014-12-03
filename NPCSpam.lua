@@ -68,7 +68,7 @@ local known = setmetatable({}, { __index = function(t, k)
 		t[name] = true
 		t[strupper(name)] = true
 	end
-	t[k] = t[k] or false
+	setmetatable(t, nil)
 	return t[k]
 end })
 

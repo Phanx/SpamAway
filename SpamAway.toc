@@ -1,5 +1,5 @@
 ## Interface: 60000
-## Notes: Hides spammy NPC dialog, useless system messages, repeated AFK messages, and automated spam from other players' addons.
+## Notes: Hides useless NPC chat, system messages, ability announcements, and more.
 ## SavedVariables: SpamAwayDB
 
 NPCSpam.lua

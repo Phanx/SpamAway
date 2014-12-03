@@ -1,21 +1,15 @@
-
+------------------------------------------------------------------------
+--	SpamAway
+-- Hides useless NPC chat, system messages, ability announcements, and more.
+-- Copyright (c) 2012-2014 Phanx <addons@phanx.net>
+-- https://github.com/Phanx/SpamAway
+------------------------------------------------------------------------
 
 local gsub     = string.gsub
 local strfind  = string.find
 local strlower = string.lower
 local strmatch = string.match
 local strupper = string.upper
-
-local knownLanguages = setmetatable({}, { __index = function(t, k)
-	for i = 1, GetNumLanguages() do
-		local language = GetLanguageByIndex(i)
-		t[language] = true
-		t[strlower(language)] = true
-		t[strupper(language)] = true
-	end
-	setmetatable(t, nil)
-	return t[k]
-end })
 
 local function IsFriend(name)
 	if not name then
@@ -47,6 +41,21 @@ end
 RaidBossEmoteFrame:UnregisterEvent("RAID_BOSS_EMOTE")
 RaidBossEmoteFrame:UnregisterEvent("RAID_BOSS_WHISPER")
 
+
+------------------------------------------------------------------------
+--	Hide useless "leader changed" raid warning messages in LFG
+------------------------------------------------------------------------
+
+do
+	local spam = gsub(LFG_LEADER_CHANGED_WARNING, "%%%d?$?s", "")
+	local oev = RaidWarningFrame_OnEvent
+	function RaidWarningFrame_OnEvent(self, event, message, ...)
+		if not strmatch(message, spam) then
+			oev(self, event, message, ...)
+		end
+	end
+end
+
 ------------------------------------------------------------------------
 -- Remove raid target icons and consecutive symbols in public chat
 ------------------------------------------------------------------------
@@ -63,21 +72,6 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", function(frame, event, messa
 	message = gsub(message, "%-%-+", "")
 	return false, message, ...
 end)
-
-
-------------------------------------------------------------------------
---	Hide useless "leader changed" raid warning messages in LFG
-------------------------------------------------------------------------
-
-do
-	local spam = gsub(LFG_LEADER_CHANGED_WARNING, "%%%d?$?s", "")
-	local oev = RaidWarningFrame_OnEvent
-	function RaidWarningFrame_OnEvent(self, event, message, ...)
-		if not strmatch(message, spam) then
-			oev(self, event, message, ...)
-		end
-	end
-end
 
 ------------------------------------------------------------------------
 --	Hide crafting spam from non-friend/guild
@@ -109,6 +103,7 @@ end
 
 ------------------------------------------------------------------------
 --	Hide "grats" and "reported" type spam
+-- Hide ability announcement spam in dungeons
 --	Hide player messages in languages you don't understand
 ------------------------------------------------------------------------
 
@@ -120,31 +115,12 @@ do
 		["gratz"] = true,
 		["reported"] = true,
 	}
-
-	local function filter(_, _, message, sender, language, ...)
-		if spam[strlower(message)] or (language and language ~= "" and not knownLanguages[language]) then
-			print("Blocked junk:", message)
-			return true
-		end
-	end
-
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_LEADER", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", filter)
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", filter)
-end
-
-------------------------------------------------------------------------
---	Hide ability announcement spam
-------------------------------------------------------------------------
-
-do
+	
+	local dungeonTypes = {
+		party = true,
+		raid = true,
+		scenario = true,
+	}
 	local dungeonSpam = {
 		-- Keywords
 		"activated",
@@ -170,19 +146,42 @@ do
 		"wind shear",
 	}
 
-	local function filter(_, _, message)
-		if IsInInstance() and UnitAffectingCombat("player") then
-			local mlower = strlower(message)
-			for i = 1, #dungeonSpam do
-				if strfind(mlower, dungeonSpam[i]) then
-					print("Removed announcement spam:", message)
-					return true
-				end
+	local known = setmetatable({}, { __index = function(t, k)
+		for i = 1, GetNumLanguages() do
+			local name, id = GetLanguageByIndex(i)
+			t[id] = true
+			t[name] = true
+			t[strupper(name)] = true
+		end
+		setmetatable(t, nil)
+		return t[k]
+	end })
+	
+	local function filter(_, event, message, sender, language, ...)
+		if spam[strlower(message)] or (language and language ~= "" and not known[language]) then
+			print("Blocked junk:", message)
+			return true
+		end
+		if event == "CHAT_MSG_CHANNEL" or not UnitAffectingCombat("player") then
+			return
+		end
+		local _, instanceType = IsInInstance()
+		if not dungeonTypes[instanceType] then
+			return
+		end
+		local mlower = strlower(message)
+		for i = 1, #dungeonSpam do
+			if strfind(mlower, dungeonSpam[i]) then
+				print("Removed announcement spam:", message)
+				return true
 			end
 		end
 	end
 
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", filter)
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_GUILD", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_PARTY_LEADER", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID", filter)
