@@ -158,7 +158,7 @@ do
 	end })
 	
 	local function filter(_, event, message, sender, language, ...)
-		if spam[strlower(message)] or (language and language ~= "" and not known[language]) then
+		if spam[strlower(message)] --[=[ or (language and language ~= "" and not known[language]) ]=] then
 			print("Blocked junk:", message)
 			return true
 		end

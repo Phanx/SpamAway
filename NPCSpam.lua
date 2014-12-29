@@ -61,12 +61,16 @@ SpamAwayDB = {
 	}
 }
 
+local notfunny = {
+	["Zhao-Jin the Bloodletter"] = "Let the men have their way with them.",
+	["Boldrich Stonerender"] = "Deathwing will have his way with your Stonemother",
+}
+
 local known = setmetatable({}, { __index = function(t, k)
 	for i = 1, GetNumLanguages() do
 		local name, id = GetLanguageByIndex(i)
 		t[id] = true
 		t[name] = true
-		t[strupper(name)] = true
 	end
 	setmetatable(t, nil)
 	return t[k]
@@ -84,17 +88,18 @@ local function filter(frame, event, message, sender, language, ...)
 		-- Never show
 		return true
 	end
-
+--[[
 	if language and language ~= "" and not known[strupper(language)] then
 		-- Can't read, don't care.
 		return true
 	end
-
+]]
 	-- Rape isn't funny, Blizzard.
-	if sender == "Zhao-Jin the Bloodletter" then
-		return false, strtrim(gsub(message, "Let the men have their way with them.")), sender, language, ...
-	elseif sender == "Boldrich Stonerender" and message == "Deathwing will have his way with your Stonemother." then
-		return true
+	if notfunny[sender] then
+		message = strtrim(gsub(message, notfunny[sender], ""))
+		if strlen(message) < 5 then
+			return true
+		end
 	end
 
 	if not seen[frame] then
