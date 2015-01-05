@@ -125,7 +125,7 @@ do
 		-- Keywords
 		"activated",
 		"interrupted",
-		-- Abilities
+		--[[ Abilities
 		"avenger",
 		"bash",
 		"counterspell",
@@ -143,7 +143,7 @@ do
 		"spell lock",
 		"strangulate",
 		"taunt",
-		"wind shear",
+		"wind shear",]]
 	}
 
 	local known = setmetatable({}, { __index = function(t, k)
