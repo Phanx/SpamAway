@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------
 --	SpamAway
 -- Hides useless NPC chat, system messages, ability announcements, and more.
--- Copyright (c) 2012-2014 Phanx <addons@phanx.net>
+-- Copyright (c) 2012-2015 Phanx <addons@phanx.net>. All rights reserved.
 -- https://github.com/Phanx/SpamAway
 ------------------------------------------------------------------------
 
