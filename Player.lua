@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------
---	SpamAway
--- Hides useless NPC chat, system messages, ability announcements, and more.
--- Copyright (c) 2012-2015 Phanx <addons@phanx.net>. All rights reserved.
--- https://github.com/Phanx/SpamAway
+--	NoNonsense
+--	Hides useless NPC chat, system messages, ability announcements, and more.
+--	Copyright (c) 2012-2016 Phanx <addons@phanx.net>. All rights reserved.
+--	https://github.com/Phanx/NoNonsense
 ------------------------------------------------------------------------
 
 local gsub     = string.gsub
@@ -35,28 +35,6 @@ local function IsFriend(name)
 end
 
 ------------------------------------------------------------------------
---	Hide boss warnings from the middle of the screen
-------------------------------------------------------------------------
-
-RaidBossEmoteFrame:UnregisterEvent("RAID_BOSS_EMOTE")
-RaidBossEmoteFrame:UnregisterEvent("RAID_BOSS_WHISPER")
-
-
-------------------------------------------------------------------------
---	Hide useless "leader changed" raid warning messages in LFG
-------------------------------------------------------------------------
-
-do
-	local spam = gsub(LFG_LEADER_CHANGED_WARNING, "%%%d?$?s", "")
-	local oev = RaidWarningFrame_OnEvent
-	function RaidWarningFrame_OnEvent(self, event, message, ...)
-		if not strmatch(message, spam) then
-			oev(self, event, message, ...)
-		end
-	end
-end
-
-------------------------------------------------------------------------
 -- Remove raid target icons and consecutive symbols in public chat
 ------------------------------------------------------------------------
 
@@ -74,36 +52,8 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", function(frame, event, messa
 end)
 
 ------------------------------------------------------------------------
---	Hide crafting spam from non-friend/guild
-------------------------------------------------------------------------
-
-do
-	local spam = gsub(TRADESKILL_LOG_THIRDPERSON, "%%%d?$?s", "(.+)")
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_TRADESKILLS", function(_, _, message)
-		local who, what = strmatch(message, spam)
-		if who and what and not IsFriend(who) then
-			return true
-		end
-	end)
-end
-
-------------------------------------------------------------------------
---	Hide achievements from non-friend/guild
-------------------------------------------------------------------------
-
-do
-	local spam = gsub(ACHIEVEMENT_BROADCAST, "%%s", "(.+)")
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_ACHIEVEMENT", function(_, _, message)
-		local who, what = strmatch(message, spam)
-		if who and what and not IsFriend(strmatch(who, "%[(.-)%]")) then
-			return true
-		end
-	end)
-end
-
-------------------------------------------------------------------------
 --	Hide "grats" and "reported" type spam
--- Hide ability announcement spam in dungeons
+--	Hide ability announcement spam in dungeons
 --	Hide player messages in languages you don't understand
 ------------------------------------------------------------------------
 
@@ -189,58 +139,6 @@ do
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_RAID_WARNING", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_YELL", filter)
-end
-
-------------------------------------------------------------------------
---	Hide spammy system messages
-------------------------------------------------------------------------
-
-local function topattern(str)
-	str = gsub(str, "%%%d?$?c", ".+")
-	str = gsub(str, "%%%d?$?d", "%%d+")
-	str = gsub(str, "%%%d?$?s", ".+")
-	str = gsub(str, "([%(%)])", "%%%1")
-	return str
-end
-_G.topattern = topattern -- DEBUG
-
-do
-	local patterns = {
-		-- Auction expired
-		topattern(ERR_AUCTION_EXPIRED_S),
-		-- Complaint Registered.
-		COMPLAINT_ADDED,
-		-- Duel info
-		topattern(DUEL_WINNER_KNOCKOUT),
-		topattern(DUEL_WINNER_RETREAT),
-		-- Drunk status
-		topattern(DRUNK_MESSAGE_ITEM_OTHER1),
-		topattern(DRUNK_MESSAGE_ITEM_OTHER2),
-		topattern(DRUNK_MESSAGE_ITEM_OTHER3),
-		topattern(DRUNK_MESSAGE_ITEM_OTHER4),
-		topattern(DRUNK_MESSAGE_OTHER1),
-		topattern(DRUNK_MESSAGE_OTHER2),
-		topattern(DRUNK_MESSAGE_OTHER3),
-		topattern(DRUNK_MESSAGE_OTHER4),
-		-- Quest verbosity
-		topattern(ERR_QUEST_REWARD_EXP_I),
-		topattern(ERR_QUEST_REWARD_ITEM_S),
-		topattern(ERR_QUEST_REWARD_ITEM_MULT_IS),
-		topattern(ERR_QUEST_REWARD_MONEY_S),
-		-- Other
-		topattern(ERR_ZONE_EXPLORED),
-		topattern(ERR_ZONE_EXPLORED_XP),
-	}
-
-	ChatFrame_AddMessageEventFilter("CHAT_MSG_SYSTEM", function(_, _, message, ...)
-		for i = 1, #patterns do
-			if strmatch(message, patterns[i]) then
-				return true
-			end
-		end
-		message = gsub(message, "([^,:|%[%]%s%.]+)%-[^,:|%[%]%s%.]+", "%1") -- remove realm names
-		return false, message, ...
-	end)
 end
 
 ------------------------------------------------------------------------
