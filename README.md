@@ -17,5 +17,7 @@ A mostly-complete list of things that are hidden:
 * System messages about duels that don't involve you, other people getting drunk, quest reward details, discovered areas
 * Messages containing Chinese, Japanese and Korean characters
 * AFK and DND messages you've already seen recently
+* Error messages about insufficient mana/rage/etc
+* Notification messages when toggling nameplates
 
 Use `/npcignore Name` to add annoying NPCs to the blacklist. Correct spelling and punctuation is required.
