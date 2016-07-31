@@ -13,3 +13,4 @@
 NPC.lua
 Player.lua
 System.lua
+UIErrors.lua

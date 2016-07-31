@@ -5,7 +5,7 @@
 --	https://github.com/Phanx/NoNonsense
 ------------------------------------------------------------------------
 
-SpamAwayDB = {
+NoNonsenseDB = {
 	npcblacklist = {
 		["Adarrah"] = true,
 		["Arcanist Braedan"] = true, ["Arkanist Braedin"] = true,
@@ -17,6 +17,7 @@ SpamAwayDB = {
 		["Dook Ookem"] = true, ["Djuuk Uukem"] = true,
 		["Dumass"] = true, ["Kagbuhn"] = true,
 		["Expelled Hozen"] = true, ["Ausgeworfener Ho-Zen"] = true,
+		["Force Commander Danath Trollbane"] = true,
 		["Frezza"] = true,
 		["Gormali Slaver"] = true, ["Gormalisklavenhändler"] = true,
 		["Greeb Ramrocket"] = true, ["Grieb Rammrakete"] = true,
@@ -79,12 +80,12 @@ end })
 local seen = {}
 
 local function filter(frame, event, message, sender, language, ...)
-	if SpamAwayDB.npcwhitelist[sender] then
+	if NoNonsenseDB.npcwhitelist[sender] then
 		-- Always show
 		return false
 	end
 
-	if SpamAwayDB.npcblacklist[sender] then
+	if NoNonsenseDB.npcblacklist[sender] then
 		-- Never show
 		return true
 	end
@@ -127,16 +128,16 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_MONSTER_YELL", filter)
 SLASH_SPAMAWAYNPC1 = "/ignorenpc"
 SlashCmdList.SPAMAWAYNPC = function(msg)
 	if strlen(msg) > 0 then
-		if SpamAwayDB.npcblacklist[msg] then
-			SpamAwayDB.npcblacklist[msg] = nil
+		if NoNonsenseDB.npcblacklist[msg] then
+			NoNonsenseDB.npcblacklist[msg] = nil
 			return print("No longer ignoring", msg)
 		else
-			SpamAwayDB.npcblacklist[msg] = true
+			NoNonsenseDB.npcblacklist[msg] = true
 			return print("Now ignoring", msg)
 		end
 	end
 	local tmplist = {}
-	for npc in pairs(SpamAwayDB.npcblacklist) do
+	for npc in pairs(NoNonsenseDB.npcblacklist) do
 		tinsert(tmplist, npc)
 	end
 	local listn = #tmplist
