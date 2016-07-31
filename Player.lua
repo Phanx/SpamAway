@@ -52,6 +52,25 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", function(frame, event, messa
 end)
 
 ------------------------------------------------------------------------
+--	Hide some unfriendly emotes
+------------------------------------------------------------------------
+
+local emotesToHide = {
+	" spits on ",
+	" rude gesture",
+	" makes some strange gestures",
+}
+local function FilterEmotes(frame, event, message, sender)
+	for i = 1, #emotesToHide do
+		if strmatch(message, emotesToHide[i]) then
+			return true
+		end
+	end
+end
+ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", FilterEmotes)
+ChatFrame_AddMessageEventFilter("CHAT_MSG_TEXT_EMOTE", FilterEmotes)
+
+------------------------------------------------------------------------
 --	Hide "grats" and "reported" type spam
 --	Hide ability announcement spam in dungeons
 --	Hide player messages in languages you don't understand
