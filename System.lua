@@ -5,6 +5,19 @@
 --	https://github.com/Phanx/NoNonsense
 -----------------------------------------------------------------------
 
+local ADDON, private = ...
+
+local function topattern(str)
+	if not str then return "" end
+	str = gsub(str, "%%%d?$?c", ".+")
+	str = gsub(str, "%%%d?$?d", "%%d+")
+	str = gsub(str, "%%%d?$?s", ".+")
+	str = gsub(str, "([%(%)])", "%%%1")
+	return str
+end
+
+private.topattern = topattern
+
 local gsub     = string.gsub
 local strfind  = string.find
 local strlower = string.lower
@@ -64,15 +77,6 @@ end
 --	Hide spammy system messages
 ------------------------------------------------------------------------
 
-local function topattern(str)
-	str = gsub(str, "%%%d?$?c", ".+")
-	str = gsub(str, "%%%d?$?d", "%%d+")
-	str = gsub(str, "%%%d?$?s", ".+")
-	str = gsub(str, "([%(%)])", "%%%1")
-	return str
-end
-_G.topattern = topattern -- DEBUG
-
 do
 	local patterns = {
 		-- Auction expired
@@ -93,8 +97,8 @@ do
 		topattern(DRUNK_MESSAGE_OTHER4),
 		-- Quest verbosity
 		topattern(ERR_QUEST_REWARD_EXP_I),
-		topattern(ERR_QUEST_REWARD_ITEM_S),
-		topattern(ERR_QUEST_REWARD_ITEM_MULT_IS),
+		--topattern(ERR_QUEST_REWARD_ITEM_S),
+		--topattern(ERR_QUEST_REWARD_ITEM_MULT_IS),
 		topattern(ERR_QUEST_REWARD_MONEY_S),
 		-- Other
 		topattern(ERR_ZONE_EXPLORED),
