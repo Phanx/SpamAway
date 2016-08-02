@@ -10,6 +10,8 @@
 
 ## SavedVariables: NoNonsenseDB
 
+Common.lua
+
 NPC.lua
 Player.lua
 System.lua

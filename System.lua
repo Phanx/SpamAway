@@ -6,17 +6,8 @@
 -----------------------------------------------------------------------
 
 local ADDON, private = ...
-
-local function topattern(str)
-	if not str then return "" end
-	str = gsub(str, "%%%d?$?c", ".+")
-	str = gsub(str, "%%%d?$?d", "%%d+")
-	str = gsub(str, "%%%d?$?s", ".+")
-	str = gsub(str, "([%(%)])", "%%%1")
-	return str
-end
-
-private.topattern = topattern
+local topattern = private.topattern
+local IsFriend = private.IsFriend
 
 local gsub     = string.gsub
 local strfind  = string.find
@@ -36,13 +27,14 @@ RaidBossEmoteFrame:UnregisterEvent("RAID_BOSS_WHISPER")
 ------------------------------------------------------------------------
 
 do
-	local spam = gsub(LFG_LEADER_CHANGED_WARNING, "%%%d?$?s", "")
-	local oev = RaidWarningFrame_OnEvent
-	function RaidWarningFrame_OnEvent(self, event, message, ...)
+	local spam = topattern(LFG_LEADER_CHANGED_WARNING)
+
+	local OnEvent = RaidWarningFrame:GetScript("OnEvent")
+	RaidWarningFrame:SetScript("OnEvent", function(self, event, message, ...)
 		if not strmatch(message, spam) then
-			oev(self, event, message, ...)
+			OnEvent(self, event, message, ...)
 		end
-	end
+	end)
 end
 
 ------------------------------------------------------------------------
@@ -50,7 +42,8 @@ end
 ------------------------------------------------------------------------
 
 do
-	local spam = gsub(TRADESKILL_LOG_THIRDPERSON, "%%%d?$?s", "(.+)")
+	local spam = topattern(TRADESKILL_LOG_THIRDPERSON)
+
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_TRADESKILLS", function(_, _, message)
 		local who, what = strmatch(message, spam)
 		if who and what and not IsFriend(who) then
@@ -64,7 +57,8 @@ end
 ------------------------------------------------------------------------
 
 do
-	local spam = gsub(ACHIEVEMENT_BROADCAST, "%%s", "(.+)")
+	local spam = topattern(ACHIEVEMENT_BROADCAST)
+
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_ACHIEVEMENT", function(_, _, message)
 		local who, what = strmatch(message, spam)
 		if who and what and not IsFriend(strmatch(who, "%[(.-)%]")) then
@@ -81,8 +75,8 @@ do
 	local patterns = {
 		-- Auction expired
 		topattern(ERR_AUCTION_EXPIRED_S),
-		-- Complaint Registered.
-		COMPLAINT_ADDED,
+		-- Complaint registered
+		topattern(COMPLAINT_ADDED),
 		-- Duel info
 		topattern(DUEL_WINNER_KNOCKOUT),
 		topattern(DUEL_WINNER_RETREAT),
@@ -97,8 +91,6 @@ do
 		topattern(DRUNK_MESSAGE_OTHER4),
 		-- Quest verbosity
 		topattern(ERR_QUEST_REWARD_EXP_I),
-		--topattern(ERR_QUEST_REWARD_ITEM_S),
-		--topattern(ERR_QUEST_REWARD_ITEM_MULT_IS),
 		topattern(ERR_QUEST_REWARD_MONEY_S),
 		-- Other
 		topattern(ERR_ZONE_EXPLORED),

@@ -5,6 +5,9 @@
 --	https://github.com/Phanx/NoNonsense
 ------------------------------------------------------------------------
 
+local _, private = ...
+local knownLanguages = private.knownLanguages
+
 NoNonsenseDB = {
 	npcblacklist = {
 		["Adarrah"] = true,
@@ -58,7 +61,7 @@ NoNonsenseDB = {
 	},
 	npcwhitelist = {
 		["Orb of Ascension"] = true, ["Kugel des Aufstiegs"] = true,
-		['"Tipsy" McManus'] = true, ['"Schluckspecht" McManus'] = true,
+		["\"Tipsy\" McManus"] = true, ["\"Schluckspecht\" McManus"] = true,
 	}
 }
 
@@ -66,16 +69,6 @@ local notfunny = {
 	["Zhao-Jin the Bloodletter"] = "Let the men have their way with them.",
 	["Boldrich Stonerender"] = "Deathwing will have his way with your Stonemother",
 }
-
-local known = setmetatable({}, { __index = function(t, k)
-	for i = 1, GetNumLanguages() do
-		local name, id = GetLanguageByIndex(i)
-		t[id] = true
-		t[name] = true
-	end
-	setmetatable(t, nil)
-	return t[k]
-end })
 
 local seen = {}
 
@@ -89,12 +82,13 @@ local function filter(frame, event, message, sender, language, ...)
 		-- Never show
 		return true
 	end
---[[
-	if language and language ~= "" and not known[strupper(language)] then
+
+	if not knownLanguages[language or ""] then
 		-- Can't read, don't care.
+		print("Blocked unknown language:", language, sender, message)
 		return true
 	end
-]]
+
 	-- Rape isn't funny, Blizzard.
 	if notfunny[sender] then
 		message = strtrim(gsub(message, notfunny[sender], ""))

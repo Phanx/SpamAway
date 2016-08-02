@@ -5,34 +5,14 @@
 --	https://github.com/Phanx/NoNonsense
 ------------------------------------------------------------------------
 
+local _, private = ...
+local knownLanguages = private.knownLanguages
+
 local gsub     = string.gsub
 local strfind  = string.find
 local strlower = string.lower
 local strmatch = string.match
 local strupper = string.upper
-
-local function IsFriend(name)
-	if not name then
-		return
-	end
-	if UnitIsInMyGuild(name) or UnitInRaid(name) or UnitInParty(name) then
-		return true
-	end
-	for i = 1, GetNumFriends() do
-		if GetFriendInfo(i) == name then
-			return true
-		end
-	end
-	local _, numBNFriends = BNGetNumFriends()
-	for i = 1, numBNFriends do
-		for j = 1, BNGetNumFriendToons(i) do
-			local _, toonName = BNGetFriendToonInfo(i, j)
-			if toonName == name then
-				return true
-			end
-		end
-	end
-end
 
 ------------------------------------------------------------------------
 -- Remove raid target icons and consecutive symbols in public chat
@@ -114,31 +94,24 @@ do
 		"taunt",
 		"wind shear",]]
 	}
-
-	local known = setmetatable({}, { __index = function(t, k)
-		for i = 1, GetNumLanguages() do
-			local name, id = GetLanguageByIndex(i)
-			t[id] = true
-			t[name] = true
-			t[strupper(name)] = true
-		end
-		setmetatable(t, nil)
-		return t[k]
-	end })
 	
 	local function filter(_, event, message, sender, language, ...)
-		if spam[strlower(message)] --[=[ or (language and language ~= "" and not known[language]) ]=] then
+		local mlower = strlower(message)
+
+		if spam[mlower] or not knownLanguages[language or ""] then
 			print("Blocked junk:", message)
 			return true
 		end
+
 		if event == "CHAT_MSG_CHANNEL" or not UnitAffectingCombat("player") then
 			return
 		end
+
 		local _, instanceType = IsInInstance()
 		if not dungeonTypes[instanceType] then
 			return
 		end
-		local mlower = strlower(message)
+
 		for i = 1, #dungeonSpam do
 			if strfind(mlower, dungeonSpam[i]) then
 				print("Removed announcement spam:", message)
@@ -161,10 +134,11 @@ do
 end
 
 ------------------------------------------------------------------------
---	Hide public messages containing East Asian characters
+--	Hide public messages containing Cyrillic or CJK characters
 --	Based on BlockChinese, by Ketho
---	http://www.curse.com/addons/wow/blockchinese
+--	https://mods.curse.com/addons/wow/blockchinese
 --	http://www.wowinterface.com/downloads/info20488-BlockChinese.html
+--	208       : Cyrillic
 --	227       : Japanese katakana / hiragana
 --	228 - 233 : Chinese characters and Japanese kanji
 --	234 - 237 : Korean characters
@@ -176,6 +150,7 @@ do
 			return true
 		end
 	end
+
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_CHANNEL", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_EMOTE", filter)
 	ChatFrame_AddMessageEventFilter("CHAT_MSG_SAY", filter)
