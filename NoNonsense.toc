@@ -1,4 +1,4 @@
-## Interface: 70000
+## Interface: 70100
 
 ## Title: No Nonsense
 ## Notes: Hides useless NPC chat, system messages, ability announcements, and more.
