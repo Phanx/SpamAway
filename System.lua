@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------
 --	NoNonsense
 --	Hides useless NPC chat, system messages, ability announcements, and more.
---	Copyright (c) 2012-2016 Phanx <addons@phanx.net>. All rights reserved.
+--	Copyright (c) 2012-2017 Phanx <addons@phanx.net>. All rights reserved.
 --	https://github.com/Phanx/NoNonsense
 -----------------------------------------------------------------------
 
@@ -93,6 +93,7 @@ do
 		topattern(ERR_QUEST_REWARD_EXP_I),
 		topattern(ERR_QUEST_REWARD_MONEY_S),
 		-- Other
+		topattern(ERR_LEARN_TRANSMOG_S),
 		topattern(ERR_ZONE_EXPLORED),
 		topattern(ERR_ZONE_EXPLORED_XP),
 	}

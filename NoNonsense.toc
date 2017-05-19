@@ -1,11 +1,11 @@
-## Interface: 70100
+## Interface: 70200
 
 ## Title: No Nonsense
 ## Notes: Hides useless NPC chat, system messages, ability announcements, and more.
 
 ## Author: Phanx
 ## X-Email: addons@phanx.net
-## X-Copyright: Copyright (c) 2012-2016 Phanx. All rights reserved.
+## X-Copyright: Copyright (c) 2012-2017 Phanx. All rights reserved.
 ## X-Website: https://github.com/Phanx/NoNonsense
 
 ## SavedVariables: NoNonsenseDB

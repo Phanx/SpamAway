@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------
 --	NoNonsense
 --	Hides useless NPC chat, system messages, ability announcements, and more.
---	Copyright (c) 2012-2016 Phanx <addons@phanx.net>. All rights reserved.
+--	Copyright (c) 2012-2017 Phanx <addons@phanx.net>. All rights reserved.
 --	https://github.com/Phanx/NoNonsense
 ------------------------------------------------------------------------
 

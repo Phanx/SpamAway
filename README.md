@@ -37,6 +37,7 @@ System message nonsense
 - Achievement announcements for unknown players
 - Auction expired, complaint registered, quest money/XP rewarded, zone explored
 - Messages about other players dueling and getting drunk
+- Item added to appearance collection
 
 
 Error message nonsense
