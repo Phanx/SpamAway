@@ -61,6 +61,7 @@ NoNonsenseDB = {
 		["Zelli Hotnozzle"] = true, ["Zelli Heißdüse"] = true,
 	},
 	npcwhitelist = {
+		["High Ravenspeaker Krikka"] = true,
 		["Orb of Ascension"] = true, ["Kugel des Aufstiegs"] = true,
 		["\"Tipsy\" McManus"] = true, ["\"Schluckspecht\" McManus"] = true,
 	}
