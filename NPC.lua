@@ -84,13 +84,13 @@ local function filter(frame, event, message, sender, language, ...)
 		-- Never show
 		return true
 	end
-
+--[[
 	if not knownLanguages[language or ""] then
 		-- Can't read, don't care.
 		print("Blocked unknown language:", language, sender, message)
 		return true
 	end
-
+]]
 	-- Rape isn't funny, Blizzard.
 	if notfunny[sender] then
 		message = strtrim(gsub(message, notfunny[sender], ""))
