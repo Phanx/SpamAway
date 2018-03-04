@@ -39,6 +39,32 @@ do
 end
 
 ------------------------------------------------------------------------
+-- Hide loot messages for other players
+------------------------------------------------------------------------
+
+do
+	local linkMatchPatterns = {
+		(string.gsub(LOOT_ITEM_SELF, "%%s", "(.+)")),
+		(string.gsub(LOOT_ITEM_SELF_MULTIPLE, "%%sx%%d", "(.+)x%%d+")),
+	}
+
+	ChatFrame_AddMessageEventFilter("CHAT_MSG_LOOT", function(frame, event, message, ...)
+		local link
+		for i = 1, #linkMatchPatterns do
+			link = string.match(message, linkMatchPatterns[i])
+			if link then break end
+		end
+
+		-- Hide other players
+		if not link then return true end
+
+		-- Hide gray items
+		local _, _, rarity = GetItemInfo(link)
+		if rarity == 0 then return true end
+	end)
+end
+
+------------------------------------------------------------------------
 --	Hide crafting spam from non-friend/guild
 ------------------------------------------------------------------------
 
