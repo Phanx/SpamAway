@@ -10,10 +10,9 @@ local _, private = ...
 
 private.topattern = function(str)
 	if not str then return "" end
-	str = gsub(str, "%%%d?$?c", ".+")
-	str = gsub(str, "%%%d?$?d", "%%d+")
-	str = gsub(str, "%%%d?$?s", ".+")
 	str = gsub(str, "([%(%)])", "%%%1")
+	str = gsub(str, "%%%d?$?[cs]", "(.+)")
+	str = gsub(str, "%%%d?$?d", "(%%d+)")
 	return str
 end
 
