@@ -1,0 +1,9 @@
+Copyright 2012-2018 Phanx <addons@phanx.net>
+
+Feel free to copy and reuse code from this addon.
+
+Forking on GitHub is OK, but please change the title to use your own name.
+
+Do not upload my addon to other places, including in compilations. If the urge
+to share is overwhelming, you can copy all the code and make your own addon
+with your own name, and share that.

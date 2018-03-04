@@ -1,9 +1,10 @@
-------------------------------------------------------------------------
---	NoNonsense
---	Hides useless NPC chat, system messages, ability announcements, and more.
---	Copyright (c) 2012-2017 Phanx <addons@phanx.net>. All rights reserved.
---	https://github.com/Phanx/NoNonsense
-------------------------------------------------------------------------
+--[[--------------------------------------------------------------------
+	NoNonsense
+	Hides useless NPC chat, system messages, ability announcements, and more.
+	Copyright 2012-2018 Phanx <addons@phanx.net>
+	All rights reserved. See LICENSE.txt for details.
+	https://github.com/Phanx/NoNonsense
+----------------------------------------------------------------------]]
 
 local _, private = ...
 local knownLanguages = private.knownLanguages

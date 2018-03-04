@@ -1,9 +1,10 @@
-------------------------------------------------------------------------
---	NoNonsense
---	Hides useless NPC chat, system messages, ability announcements, and more.
---	Copyright (c) 2012-2017 Phanx <addons@phanx.net>. All rights reserved.
---	https://github.com/Phanx/NoNonsense
-------------------------------------------------------------------------
+--[[--------------------------------------------------------------------
+	NoNonsense
+	Hides useless NPC chat, system messages, ability announcements, and more.
+	Copyright 2012-2018 Phanx <addons@phanx.net>
+	All rights reserved. See LICENSE.txt for details.
+	https://github.com/Phanx/NoNonsense
+----------------------------------------------------------------------]]
 
 local _, private = ...
 local knownLanguages = private.knownLanguages
@@ -136,8 +137,8 @@ end
 ------------------------------------------------------------------------
 --	Hide public messages containing Cyrillic or CJK characters
 --	Based on BlockChinese, by Ketho
---	https://mods.curse.com/addons/wow/blockchinese
---	http://www.wowinterface.com/downloads/info20488-BlockChinese.html
+--	https://www.curseforge.com/wow/addons/blockchinese
+--	https://www.wowinterface.com/downloads/info20488-BlockChinese.html
 --	208       : Cyrillic
 --	227       : Japanese katakana / hiragana
 --	228 - 233 : Chinese characters and Japanese kanji
@@ -161,7 +162,7 @@ end
 ------------------------------------------------------------------------
 --	Hide repeated AFK and DND auto-responses.
 --	Based on FilterAFK by Tsigo, and DontBugMe by Moonsorrow and Gnarfoz
---	http://www.wowinterface.com/downloads/info14574.html
+--	https://www.wowinterface.com/downloads/info14574.html
 ------------------------------------------------------------------------
 do
 	local seen = {}
