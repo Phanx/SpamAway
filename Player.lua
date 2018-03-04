@@ -96,11 +96,11 @@ do
 		"wind shear",]]
 	}
 	
-	local function filter(_, event, message, sender, language, ...)
-		local mlower = strlower(message)
+	local function filter(_, event, message, sender, language, _, _, _, _, _, _, _, _, guid, ...)
+		local normalized = gsub(strlower(message), "[^a-z ]", "")
 
-		if spam[mlower] or not knownLanguages[language or ""] then
-			print("Blocked junk:", message)
+		if spam[normalized] or not knownLanguages[language or ""] then
+			-- print("Blocked junk:", message)
 			return true
 		end
 
@@ -114,8 +114,8 @@ do
 		end
 
 		for i = 1, #dungeonSpam do
-			if strfind(mlower, dungeonSpam[i]) then
-				print("Removed announcement spam:", message)
+			if strfind(normalized, dungeonSpam[i]) then
+				-- print("Removed announcement spam:", message)
 				return true
 			end
 		end
